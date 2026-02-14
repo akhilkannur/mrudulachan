@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="ml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>പ്യാരിയുടെ സ്വന്തം ഭവാനിക്ക്</title>
+    <link href="https://fonts.googleapis.com/css2?family=Manjari:wght@100;400;700&family=Kalam:wght@300;400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --paper: #fff9e6;
+            --ink: #1a1a1a;
+            --accent: #ff3e3e;
+            --legal-yellow: #fff3a0;
+        }
+
+        body {
+            margin: 0;
+            background-color: #0a0a0a;
+            font-family: 'Manjari', sans-serif;
+            color: var(--ink);
+            overflow-x: hidden;
+            background-image: 
+                radial-gradient(circle at 20% 30%, #1a1a1a 0%, #0a0a0a 100%);
+        }
+
+        /* The Creative Canvas */
+        .canvas {
+            position: relative;
+            width: 100vw;
+            min-height: 120vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 100px 0;
+            overflow: hidden;
+        }
+
+        /* Scattered Art Pieces */
+        .scattered-art {
+            position: absolute;
+            width: 220px;
+            background: #fff;
+            padding: 10px 10px 30px 10px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            cursor: pointer;
+            z-index: 1;
+        }
+
+        .scattered-art img {
+            width: 100%;
+            height: auto;
+            display: block;
+            filter: grayscale(20%);
+            transition: filter 0.3s;
+        }
+
+        .scattered-art:hover {
+            z-index: 100 !important;
+            transform: scale(1.2) rotate(0deg) !important;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.8);
+        }
+
+        .scattered-art:hover img {
+            filter: grayscale(0%);
+        }
+
+        /* The Letter - High Z-Index to stay on top but look like part of the pile */
+        .letter-wrap {
+            position: relative;
+            z-index: 50;
+            width: 90%;
+            max-width: 550px;
+            perspective: 1000px;
+            filter: drop-shadow(0 20px 40px rgba(0,0,0,0.6));
+        }
+
+        .letter {
+            background: var(--paper);
+            padding: 40px;
+            border: 1px solid #d4c8a8;
+            position: relative;
+            transform: rotate(1deg);
+            background-image: repeating-linear-gradient(#fff9e6, #fff9e6 31px, #e1d9c1 31px, #e1d9c1 32px);
+            line-height: 32px;
+        }
+
+        /* Her Main Photo */
+        .her-photo {
+            position: absolute;
+            right: -60px;
+            top: -40px;
+            width: 180px;
+            background: white;
+            padding: 10px 10px 40px 10px;
+            box-shadow: 5px 10px 20px rgba(0,0,0,0.4);
+            transform: rotate(12deg);
+            z-index: 60;
+            border: 1px solid #ddd;
+        }
+
+        .her-photo img {
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+        }
+
+        .her-photo::after {
+            content: 'The Boss ❤️';
+            position: absolute;
+            bottom: 10px;
+            left: 0;
+            width: 100%;
+            text-align: center;
+            font-family: 'Kalam', cursive;
+            font-size: 16px;
+            color: #333;
+        }
+
+        .lawyer-badge {
+            position: absolute;
+            top: -20px;
+            left: -30px;
+            background: var(--legal-yellow);
+            padding: 10px 20px;
+            border: 2px solid #000;
+            font-weight: bold;
+            transform: rotate(-15deg);
+            box-shadow: 5px 5px 0px #000;
+            z-index: 70;
+            font-family: 'Courier New', monospace;
+            text-transform: uppercase;
+            font-size: 12px;
+        }
+
+        .letter-text {
+            font-family: 'Kalam', cursive;
+            font-size: 1.3rem;
+            color: #2c3e50;
+        }
+
+        /* Marquee */
+        .marquee {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            background: var(--accent);
+            color: white;
+            padding: 8px 0;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            z-index: 200;
+            font-size: 11px;
+            white-space: nowrap;
+        }
+
+        @media (max-width: 768px) {
+            .her-photo {
+                position: relative;
+                right: 0;
+                top: 0;
+                margin: 0 auto 20px;
+                transform: rotate(0);
+                width: 200px;
+            }
+            .letter-wrap { width: 95%; }
+            .scattered-art { width: 140px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="marquee">
+    • ARTIST BY DAY • LAWYER BY NIGHT • BHAVANI: STEALING HEARTS SINCE THE PANDEMIC • SECTION 302 FOR EXCESSIVE BEAUTY • ARTIST BY DAY • LAWYER BY NIGHT • 
+</div>
+
+<div class="canvas" id="canvas">
+    
+    <!-- This will be filled with scattered art behind the letter -->
+    
+    <div class="letter-wrap">
+        <div class="lawyer-badge">Confidential: Case of Love</div>
+        
+        <div class="her-photo">
+            <img src="artist_images/image01.jpg" alt="Mrudula">
+        </div>
+
+        <div class="letter">
+            <div class="letter-text">
+                <p>എന്റെ പൊന്നു ഭവാനീ...</p>
+                
+                <p>ഇത് നിന്റെ സ്വന്തം പ്യാരിയാണ്. ഗസൽ കേൾക്കാനും ബിരിയാണി കഴിക്കാനും മാത്രമല്ല, നിന്റെ വക്കീൽ ബുദ്ധിയും പെയിന്റിംഗ് ബ്രഷും കാണുമ്പോൾ എന്റെ ഹൃദയം ഒരു വള്ളംകളി പോലെ തുടിക്കും!</p>
+                
+                <p>നീ കോർട്ടിൽ കേസ് വാദിക്കുമ്പോൾ ജഡ്ജി പോലും കണ്ണ് തള്ളിയിരിക്കും, പക്ഷേ നീ വരയ്ക്കുന്ന ആ ചിത്രങ്ങൾ കാണുമ്പോൾ എനിക്ക് തോന്നും നീയൊരു പാവം വക്കീൽ അല്ല, സാക്ഷാൽ വാൻഗോഗിന്റെ അപ്പൂപ്പന്റെ മകളാണെന്ന്!</p>
+
+                <p>സത്യം പറഞ്ഞാൽ നിനക്ക് എതിരെ ഒരു കേസ് ഫയൽ ചെയ്യണം. "മനുഷ്യന്റെ സമാധാനം കളയുന്ന ആർട്ടിസ്റ്റ്" എന്ന വകുപ്പ് ഇട്ടു നിന്നെ എന്റെ ഹൃദയത്തിൽ തടവിിലാക്കണം. </p>
+
+                <p>നിന്റെ വരകൾക്കും വക്കാലത്തിനും ഇടയിൽ ഈ പ്യാരിയെ മറക്കരുത്. നമ്മുടെ ജീവിതം ഒരു നല്ല മൾട്ടികളർ പെയിന്റിംഗ് പോലെ അടിച്ചു പൊളിക്കാം!</p>
+
+                <p style="text-align: right; margin-top: 40px; line-height: 1.2;">സനേഹപൂർവ്വം,<br><span style="font-size: 1.5rem;"><strong>നിന്റെ സ്വന്തം പ്യാരി</strong></span></p>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    const images = [
+        '00057bb7_original.jpg', '31af6d17_original.jpg', '3fc9481b_original.jpg', 
+        '421e90b2_original.jpg', '4ca4b9ec_original.jpg', '51d93694_original.jpg', 
+        '53f966ea_original.jpg', '587c8f14_original.jpg', '6ad34d8d_original.jpg', 
+        '6fcdb535_original.jpg', '8468af29_original.jpg', '89c4c0ed_original.jpg', 
+        '976ab797_original.jpg', '9854fea4_original.jpg', 'a9be9c81_original.jpg', 
+        'ab769e6c_original.jpg', 'b52622ae_original.jpg', 'bf5e188c_original.jpg', 
+        'cfcf19a1_original.jpg', 'd542d804_original.jpg', 'e53d8540_original.jpg', 
+        'f554e7a2_original.jpg'
+    ];
+
+    const canvas = document.getElementById('canvas');
+    const width = window.innerWidth;
+    const height = window.innerHeight;
+
+    images.forEach((img, index) => {
+        const div = document.createElement('div');
+        div.className = 'scattered-art';
+        
+        // Randomly scatter images
+        // We want some behind (z-index 1-10) and maybe some peek from behind the letter
+        const x = Math.random() * (width - 250);
+        const y = Math.random() * (height + 200);
+        const rotation = (Math.random() * 60) - 30;
+        
+        div.style.left = `${x}px`;
+        div.style.top = `${y}px`;
+        div.style.transform = `rotate(${rotation}deg)`;
+        
+        // Assign random z-index to create depth, some below letter (50), some maybe above?
+        // Let's keep most below 50.
+        div.style.zIndex = Math.floor(Math.random() * 45);
+
+        div.innerHTML = `<img src="artist_images/${img}" alt="Artwork" loading="lazy">`;
+        canvas.appendChild(div);
+    });
+
+    // Subtle parallax on mouse move
+    document.addEventListener('mousemove', (e) => {
+        const x = (window.innerWidth - e.pageX * 2) / 100;
+        const y = (window.innerHeight - e.pageY * 2) / 100;
+        
+        const arts = document.querySelectorAll('.scattered-art');
+        arts.forEach((art, i) => {
+            const factor = (i % 5 + 1);
+            art.style.marginLeft = `${x * factor}px`;
+            art.style.marginTop = `${y * factor}px`;
+        });
+    });
+</script>
+
+</body>
+</html>
