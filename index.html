@@ -11,98 +11,102 @@
             --ink: #1a1a1a;
             --accent: #ff3e3e;
             --legal-yellow: #fff3a0;
+            --bg-gradient: linear-gradient(135deg, #1a1c2c 0%, #4a192c 100%);
         }
 
         body {
             margin: 0;
-            background-color: #0a0a0a;
+            background: #000;
             font-family: 'Manjari', sans-serif;
             color: var(--ink);
-            overflow-x: hidden;
-            background-image: radial-gradient(circle at 50% 50%, #1a1a1a 0%, #0a0a0a 100%);
+            overflow: hidden; /* Prevent scrolling, use the draggable world */
+            height: 100vh;
+            width: 100vw;
+            background: var(--bg-gradient);
             -webkit-tap-highlight-color: transparent;
         }
 
-        /* The Creative Canvas */
-        .canvas {
-            position: relative;
-            width: 100vw;
-            min-height: 100vh;
+        /* Loading Animation */
+        #loader {
+            position: fixed;
+            inset: 0;
+            background: #000;
+            z-index: 1000;
             display: flex;
-            flex-direction: column;
+            justify-content: center;
             align-items: center;
-            padding: 60px 0 100px 0;
+            color: white;
+            transition: opacity 1s ease;
+        }
+
+        /* The Interactive Stage */
+        #stage {
+            position: relative;
+            width: 100%;
+            height: 100%;
             overflow: hidden;
+            perspective: 1000px;
         }
 
         /* Scattered Art Pieces */
-        .scattered-art {
+        .art-card {
             position: absolute;
-            width: 160px; /* Smaller for mobile */
+            width: 150px;
             background: #fff;
-            padding: 6px 6px 20px 6px;
+            padding: 8px 8px 25px 8px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-            transition: all 0.3s ease;
-            cursor: pointer;
-            z-index: 1;
+            cursor: grab;
+            user-select: none;
+            opacity: 0;
+            transform: scale(0) translateZ(-500px);
+            transition: opacity 0.5s, transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
-        .scattered-art img {
+        .art-card img {
             width: 100%;
             height: auto;
             display: block;
             pointer-events: none;
         }
 
-        /* Letter Styling */
+        .art-card:active { cursor: grabbing; }
+
+        /* The Letter */
         .letter-wrap {
-            position: relative;
-            z-index: 50;
+            position: absolute;
+            left: 50%;
+            top: 50%;
             width: 90%;
-            max-width: 450px;
-            margin: 40px auto;
-            filter: drop-shadow(0 20px 40px rgba(0,0,0,0.8));
+            max-width: 400px;
+            transform: translate(-50%, -50%) scale(0) rotate(-10deg);
+            z-index: 100;
+            opacity: 0;
+            cursor: grab;
+            transition: opacity 0.5s, transform 1s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
         .letter {
             background: var(--paper);
             padding: 30px;
             border: 1px solid #d4c8a8;
-            position: relative;
-            transform: rotate(-1deg);
             background-image: repeating-linear-gradient(#fff9e6, #fff9e6 31px, #e1d9c1 31px, #e1d9c1 32px);
             line-height: 32px;
+            box-shadow: 10px 20px 50px rgba(0,0,0,0.6);
         }
 
         .her-photo {
             position: absolute;
-            right: -20px;
-            top: -50px;
-            width: 140px;
+            right: -15px;
+            top: -40px;
+            width: 120px;
             background: white;
-            padding: 8px 8px 30px 8px;
+            padding: 5px 5px 25px 5px;
             box-shadow: 5px 10px 20px rgba(0,0,0,0.4);
             transform: rotate(8deg);
-            z-index: 60;
             border: 1px solid #ddd;
         }
 
-        .her-photo img {
-            width: 100%;
-            height: 160px;
-            object-fit: cover;
-        }
-
-        .her-photo::after {
-            content: 'The Boss ❤️';
-            position: absolute;
-            bottom: 5px;
-            left: 0;
-            width: 100%;
-            text-align: center;
-            font-family: 'Kalam', cursive;
-            font-size: 14px;
-        }
+        .her-photo img { width: 100%; height: 140px; object-fit: cover; }
 
         .lawyer-badge {
             position: absolute;
@@ -114,99 +118,110 @@
             font-weight: bold;
             transform: rotate(-10deg);
             box-shadow: 4px 4px 0px #000;
-            z-index: 70;
             font-family: 'Courier New', monospace;
             font-size: 10px;
         }
 
         .letter-text {
             font-family: 'Kalam', cursive;
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             color: #2c3e50;
         }
 
-        /* Popup Overlay */
+        /* Dynamic Marquee */
+        .footer-ribbon {
+            position: fixed;
+            bottom: 20px;
+            width: 120%;
+            left: -10%;
+            background: var(--accent);
+            color: white;
+            padding: 12px 0;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            z-index: 500;
+            font-size: 12px;
+            transform: rotate(-2deg);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.5);
+            overflow: hidden;
+        }
+
+        .marquee-content {
+            display: inline-block;
+            white-space: nowrap;
+            animation: marquee 20s linear infinite;
+        }
+
+        @keyframes marquee {
+            from { transform: translateX(0); }
+            to { transform: translateX(-50%); }
+        }
+
+        /* Overlay for Popups */
         #overlay {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            background: rgba(0,0,0,0.9);
+            inset: 0;
+            background: rgba(0,0,0,0.95);
             display: none;
             justify-content: center;
             align-items: center;
-            z-index: 1000;
-            backdrop-filter: blur(5px);
+            z-index: 2000;
+            backdrop-filter: blur(10px);
         }
 
         #overlay img {
             max-width: 90%;
-            max-height: 80%;
-            border: 10px solid white;
-            box-shadow: 0 0 50px rgba(255,255,255,0.2);
-            transform: scale(0.8);
-            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            max-height: 85%;
+            border: 8px solid white;
         }
 
-        #overlay.active img {
-            transform: scale(1);
+        /* Floating Hearts on Background */
+        .bg-heart {
+            position: absolute;
+            color: rgba(255, 62, 62, 0.2);
+            pointer-events: none;
+            font-size: 20px;
+            z-index: 0;
         }
 
-        /* Marquee */
-        .marquee {
-            position: fixed;
-            bottom: 0;
-            width: 100%;
-            background: var(--accent);
-            color: white;
-            padding: 8px 0;
-            font-weight: bold;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            z-index: 200;
-            font-size: 10px;
-            white-space: nowrap;
-        }
-
-        /* Mobile specific adjustments */
         @media (max-width: 480px) {
-            .letter-text { font-size: 1.1rem; }
-            .scattered-art { width: 120px; }
-            .her-photo { width: 110px; right: -10px; }
+            .art-card { width: 110px; }
+            .letter-wrap { max-width: 320px; }
         }
     </style>
 </head>
 <body>
 
-<div id="overlay">
-    <img src="" alt="Popup Artwork">
-</div>
+<div id="loader">ഹൃദയം നിറയെ സ്നേഹത്തോടെ...</div>
 
-<div class="marquee">
-    • ARTIST BY DAY • LAWYER BY NIGHT • BHAVANI: STEALING HEARTS SINCE THE PANDEMIC • SECTION 302 FOR EXCESSIVE BEAUTY • 
-</div>
+<div id="overlay"><img src=""></div>
 
-<div class="canvas" id="canvas">
+<div id="stage">
+    <!-- Art cards will be injected here -->
     
-    <div class="letter-wrap">
-        <div class="lawyer-badge">Exhibit: My Heart</div>
-        
+    <div class="letter-wrap" id="letter">
+        <div class="lawyer-badge">Exhibit: BHAVANI 1993</div>
         <div class="her-photo">
-            <img src="artist_images/image01.jpg" alt="Mrudula">
+            <img src="artist_images/image01.jpg" alt="Bhavani">
+            <div style="font-family:'Kalam'; text-align:center; font-size:12px; padding-top:5px">The Artist Lawyer</div>
         </div>
-
         <div class="letter">
             <div class="letter-text">
                 <p>എന്റെ പൊന്നു ഭവാനീ...</p>
                 <p>ഇത് നിന്റെ സ്വന്തം പ്യാരിയാണ്. ഗസൽ കേൾക്കാനും ബിരിയാണി കഴിക്കാനും മാത്രമല്ല, നിന്റെ വക്കീൽ ബുദ്ധിയും പെയിന്റിംഗ് ബ്രഷും കാണുമ്പോൾ എന്റെ ഹൃദയം ഒരു വള്ളംകളി പോലെ തുടിക്കും!</p>
                 <p>നീ കോർട്ടിൽ കേസ് വാദിക്കുമ്പോൾ ജഡ്ജി പോലും കണ്ണ് തള്ളിയിരിക്കും, പക്ഷേ നീ വരയ്ക്കുന്ന ആ ചിത്രങ്ങൾ കാണുമ്പോൾ എനിക്ക് തോന്നും നീയൊരു പാവം വക്കീൽ അല്ല, സാക്ഷാൽ വാൻഗോഗിന്റെ അപ്പൂപ്പന്റെ മകളാണെന്ന്!</p>
                 <p>സത്യം പറഞ്ഞാൽ നിനക്ക് എതിരെ ഒരു കേസ് ഫയൽ ചെയ്യണം. "മനുഷ്യന്റെ സമാധാനം കളയുന്ന ആർട്ടിസ്റ്റ്" എന്ന വകുപ്പ് ഇട്ടു നിന്നെ എന്റെ ഹൃദയത്തിൽ തടവിിലാക്കണം.</p>
-                <p style="text-align: right; margin-top: 30px;">സനേഹപൂർവ്വം,<br><strong>നിന്റെ സ്വന്തം പ്യാരി</strong></p>
+                <p style="text-align: right; margin-top: 20px;">സനേഹപൂർവ്വം,<br><strong>നിന്റെ പ്യാരി</strong></p>
             </div>
         </div>
     </div>
+</div>
 
+<div class="footer-ribbon">
+    <div class="marquee-content">
+        LAWYER BY DAY • ARTIST BY NIGHT • BHAVANI STEALING HEARTS SINCE 1993 • LAWYER BY DAY • ARTIST BY NIGHT • BHAVANI STEALING HEARTS SINCE 1993 • 
+    </div>
 </div>
 
 <script>
@@ -221,53 +236,102 @@
         'f554e7a2_original.jpg'
     ];
 
-    const canvas = document.getElementById('canvas');
-    const overlay = document.getElementById('overlay');
-    const overlayImg = overlay.querySelector('img');
+    const stage = document.getElementById('stage');
+    const letter = document.getElementById('letter');
+    const loader = document.getElementById('loader');
 
-    // Scatter artwork
-    images.forEach((img) => {
-        const div = document.createElement('div');
-        div.className = 'scattered-art';
-        
-        // Random placement optimized for mobile viewport
-        const x = Math.random() * (window.innerWidth - 130);
-        const y = Math.random() * (document.body.scrollHeight - 300);
-        const rotation = (Math.random() * 40) - 20;
-        
-        div.style.left = `${x}px`;
-        div.style.top = `${y}px`;
-        div.style.transform = `rotate(${rotation}deg)`;
-        div.style.zIndex = Math.floor(Math.random() * 40);
+    // Scatter and Animate Art on Load
+    function init() {
+        images.forEach((img, i) => {
+            const card = document.createElement('div');
+            card.className = 'art-card';
+            card.innerHTML = `<img src="artist_images/${img}">`;
+            
+            // Random scatter
+            const x = Math.random() * (window.innerWidth - 150);
+            const y = Math.random() * (window.innerHeight - 200);
+            const rot = (Math.random() * 60) - 30;
+            
+            card.style.left = `${x}px`;
+            card.style.top = `${y}px`;
+            card.setAttribute('data-rot', rot);
+            card.style.transform = `scale(0) rotate(${rot}deg)`;
+            
+            // Click for popup
+            card.onclick = () => {
+                const overlay = document.getElementById('overlay');
+                overlay.querySelector('img').src = card.querySelector('img').src;
+                overlay.style.display = 'flex';
+            };
 
-        div.innerHTML = `<img src="artist_images/${img}" alt="Artwork">`;
-        
-        // Click to popup
-        div.addEventListener('click', (e) => {
-            overlayImg.src = e.target.querySelector('img').src;
-            overlay.style.display = 'flex';
-            setTimeout(() => overlay.classList.add('active'), 10);
+            stage.appendChild(card);
+            
+            // Staggered entrance
+            setTimeout(() => {
+                card.style.opacity = '1';
+                card.style.transform = `scale(1) rotate(${rot}deg)`;
+            }, 1000 + (i * 100));
+
+            makeDraggable(card);
         });
 
-        canvas.appendChild(div);
-    });
+        // Animate Letter
+        setTimeout(() => {
+            letter.style.opacity = '1';
+            letter.style.transform = `translate(-50%, -50%) scale(1) rotate(2deg)`;
+        }, 500);
 
-    // Close overlay
-    overlay.addEventListener('click', () => {
-        overlay.classList.remove('active');
-        setTimeout(() => overlay.style.display = 'none', 300);
-    });
+        loader.style.opacity = '0';
+        setTimeout(() => loader.remove(), 1000);
+    }
 
-    // Parallax
-    window.addEventListener('deviceorientation', (e) => {
-        const x = e.gamma / 10;
-        const y = e.beta / 10;
-        const arts = document.querySelectorAll('.scattered-art');
-        arts.forEach((art, i) => {
-            const factor = (i % 3 + 1);
-            art.style.transform += ` translate(${x * factor}px, ${y * factor}px)`;
-        });
-    });
+    // Drag Logic
+    function makeDraggable(el) {
+        let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+        el.onmousedown = dragMouseDown;
+        el.ontouchstart = dragMouseDown;
+
+        function dragMouseDown(e) {
+            e.preventDefault();
+            const clientX = e.type === 'touchstart' ? e.touches[0].clientX : e.clientX;
+            const clientY = e.type === 'touchstart' ? e.touches[0].clientY : e.clientY;
+            pos3 = clientX;
+            pos4 = clientY;
+            document.onmouseup = closeDragElement;
+            document.ontouchend = closeDragElement;
+            document.onmousemove = elementDrag;
+            document.ontouchmove = elementDrag;
+            el.style.zIndex = "1000";
+        }
+
+        function elementDrag(e) {
+            e.preventDefault();
+            const clientX = e.type === 'touchmove' ? e.touches[0].clientX : e.clientX;
+            const clientY = e.type === 'touchmove' ? e.touches[0].clientY : e.clientY;
+            pos1 = pos3 - clientX;
+            pos2 = pos4 - clientY;
+            pos3 = clientX;
+            pos4 = clientY;
+            el.style.top = (el.offsetTop - pos2) + "px";
+            el.style.left = (el.offsetLeft - pos1) + "px";
+        }
+
+        function closeDragElement() {
+            document.onmouseup = null;
+            document.ontouchend = null;
+            document.onmousemove = null;
+            document.ontouchmove = null;
+            el.style.zIndex = el.classList.contains('letter-wrap') ? "100" : "50";
+        }
+    }
+
+    makeDraggable(letter);
+    
+    document.getElementById('overlay').onclick = function() {
+        this.style.display = 'none';
+    };
+
+    window.onload = init;
 </script>
 
 </body>
