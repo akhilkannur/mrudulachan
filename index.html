@@ -19,14 +19,14 @@
             background: #000;
             font-family: 'Manjari', sans-serif;
             color: var(--ink);
-            overflow: hidden; /* Prevent scrolling, use the draggable world */
+            overflow: hidden;
             height: 100vh;
             width: 100vw;
             background: var(--bg-gradient);
             -webkit-tap-highlight-color: transparent;
+            touch-action: none;
         }
 
-        /* Loading Animation */
         #loader {
             position: fixed;
             inset: 0;
@@ -37,27 +37,27 @@
             align-items: center;
             color: white;
             transition: opacity 1s ease;
+            font-size: 1.2rem;
         }
 
-        /* The Interactive Stage */
         #stage {
             position: relative;
             width: 100%;
             height: 100%;
             overflow: hidden;
-            perspective: 1000px;
+            perspective: 1200px;
         }
 
-        /* Scattered Art Pieces */
         .art-card {
             position: absolute;
-            width: 150px;
+            width: 140px;
             background: #fff;
             padding: 8px 8px 25px 8px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.5);
             cursor: grab;
             user-select: none;
             opacity: 0;
+            z-index: 10;
             transform: scale(0) translateZ(-500px);
             transition: opacity 0.5s, transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
@@ -69,36 +69,33 @@
             pointer-events: none;
         }
 
-        .art-card:active { cursor: grabbing; }
-
-        /* The Letter */
         .letter-wrap {
             position: absolute;
             left: 50%;
             top: 50%;
-            width: 90%;
-            max-width: 400px;
-            transform: translate(-50%, -50%) scale(0) rotate(-10deg);
+            width: 85%;
+            max-width: 380px;
+            transform: translate(-50%, -50%) scale(0);
             z-index: 100;
             opacity: 0;
             cursor: grab;
-            transition: opacity 0.5s, transform 1s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transition: opacity 0.5s, transform 1.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
         .letter {
             background: var(--paper);
-            padding: 30px;
+            padding: 25px;
             border: 1px solid #d4c8a8;
             background-image: repeating-linear-gradient(#fff9e6, #fff9e6 31px, #e1d9c1 31px, #e1d9c1 32px);
             line-height: 32px;
-            box-shadow: 10px 20px 50px rgba(0,0,0,0.6);
+            box-shadow: 0 30px 60px rgba(0,0,0,0.7);
         }
 
         .her-photo {
             position: absolute;
-            right: -15px;
-            top: -40px;
-            width: 120px;
+            right: -10px;
+            top: -50px;
+            width: 110px;
             background: white;
             padding: 5px 5px 25px 5px;
             box-shadow: 5px 10px 20px rgba(0,0,0,0.4);
@@ -106,7 +103,7 @@
             border: 1px solid #ddd;
         }
 
-        .her-photo img { width: 100%; height: 140px; object-fit: cover; }
+        .her-photo img { width: 100%; height: 130px; object-fit: cover; }
 
         .lawyer-badge {
             position: absolute;
@@ -128,21 +125,19 @@
             color: #2c3e50;
         }
 
-        /* Dynamic Marquee */
         .footer-ribbon {
             position: fixed;
-            bottom: 20px;
-            width: 120%;
-            left: -10%;
+            bottom: 25px;
+            width: 140%;
+            left: -20%;
             background: var(--accent);
             color: white;
-            padding: 12px 0;
+            padding: 10px 0;
             font-weight: 700;
             text-transform: uppercase;
-            letter-spacing: 2px;
             z-index: 500;
-            font-size: 12px;
-            transform: rotate(-2deg);
+            font-size: 11px;
+            transform: rotate(-3deg);
             box-shadow: 0 5px 20px rgba(0,0,0,0.5);
             overflow: hidden;
         }
@@ -150,7 +145,7 @@
         .marquee-content {
             display: inline-block;
             white-space: nowrap;
-            animation: marquee 20s linear infinite;
+            animation: marquee 25s linear infinite;
         }
 
         @keyframes marquee {
@@ -158,36 +153,43 @@
             to { transform: translateX(-50%); }
         }
 
-        /* Overlay for Popups */
         #overlay {
             position: fixed;
             inset: 0;
-            background: rgba(0,0,0,0.95);
+            background: rgba(0,0,0,0.96);
             display: none;
             justify-content: center;
             align-items: center;
             z-index: 2000;
-            backdrop-filter: blur(10px);
+            backdrop-filter: blur(15px);
+            opacity: 0;
+            transition: opacity 0.4s ease;
         }
+
+        #overlay.active { opacity: 1; }
 
         #overlay img {
-            max-width: 90%;
+            max-width: 92%;
             max-height: 85%;
-            border: 8px solid white;
+            border: 6px solid white;
+            transform: scale(0.5);
+            transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
-        /* Floating Hearts on Background */
-        .bg-heart {
+        #overlay.active img { transform: scale(1); }
+
+        /* Heart Burst Particles */
+        .heart-particle {
             position: absolute;
-            color: rgba(255, 62, 62, 0.2);
             pointer-events: none;
-            font-size: 20px;
-            z-index: 0;
+            z-index: 999;
+            font-size: 24px;
+            animation: burst 1.2s ease-out forwards;
         }
 
-        @media (max-width: 480px) {
-            .art-card { width: 110px; }
-            .letter-wrap { max-width: 320px; }
+        @keyframes burst {
+            0% { transform: translate(-50%, -50%) scale(0); opacity: 1; }
+            100% { transform: translate(var(--tx), var(--ty)) scale(1.5) rotate(var(--tr)); opacity: 0; }
         }
     </style>
 </head>
@@ -198,13 +200,11 @@
 <div id="overlay"><img src=""></div>
 
 <div id="stage">
-    <!-- Art cards will be injected here -->
-    
     <div class="letter-wrap" id="letter">
-        <div class="lawyer-badge">Exhibit: BHAVANI 1993</div>
+        <div class="lawyer-badge">Confidential: 1993</div>
         <div class="her-photo">
             <img src="artist_images/image01.jpg" alt="Bhavani">
-            <div style="font-family:'Kalam'; text-align:center; font-size:12px; padding-top:5px">The Artist Lawyer</div>
+            <div style="font-family:'Kalam'; text-align:center; font-size:11px; padding-top:4px">My Bhavani ❤️</div>
         </div>
         <div class="letter">
             <div class="letter-text">
@@ -239,96 +239,101 @@
     const stage = document.getElementById('stage');
     const letter = document.getElementById('letter');
     const loader = document.getElementById('loader');
+    const overlay = document.getElementById('overlay');
+    const overlayImg = overlay.querySelector('img');
 
-    // Scatter and Animate Art on Load
+    function burstHearts() {
+        for(let i=0; i<25; i++) {
+            const heart = document.createElement('div');
+            heart.className = 'heart-particle';
+            heart.innerHTML = '❤️';
+            heart.style.left = '50%';
+            heart.style.top = '50%';
+            const tx = (Math.random() - 0.5) * 600;
+            const ty = (Math.random() - 0.5) * 800;
+            const tr = (Math.random() * 360);
+            heart.style.setProperty('--tx', `${tx}px`);
+            heart.style.setProperty('--ty', `${ty}px`);
+            heart.style.setProperty('--tr', `${tr}deg`);
+            document.body.appendChild(heart);
+            setTimeout(() => heart.remove(), 1500);
+        }
+    }
+
     function init() {
+        burstHearts();
+        
         images.forEach((img, i) => {
             const card = document.createElement('div');
             card.className = 'art-card';
             card.innerHTML = `<img src="artist_images/${img}">`;
             
-            // Random scatter
-            const x = Math.random() * (window.innerWidth - 150);
-            const y = Math.random() * (window.innerHeight - 200);
-            const rot = (Math.random() * 60) - 30;
+            const x = Math.random() * (window.innerWidth - 140);
+            const y = Math.random() * (window.innerHeight - 180);
+            const rot = (Math.random() * 50) - 25;
             
             card.style.left = `${x}px`;
             card.style.top = `${y}px`;
-            card.setAttribute('data-rot', rot);
             card.style.transform = `scale(0) rotate(${rot}deg)`;
             
-            // Click for popup
             card.onclick = () => {
-                const overlay = document.getElementById('overlay');
-                overlay.querySelector('img').src = card.querySelector('img').src;
+                overlayImg.src = card.querySelector('img').src;
                 overlay.style.display = 'flex';
+                setTimeout(() => overlay.classList.add('active'), 10);
             };
 
             stage.appendChild(card);
             
-            // Staggered entrance
             setTimeout(() => {
                 card.style.opacity = '1';
                 card.style.transform = `scale(1) rotate(${rot}deg)`;
-            }, 1000 + (i * 100));
+            }, 800 + (i * 80));
 
             makeDraggable(card);
         });
 
-        // Animate Letter
         setTimeout(() => {
             letter.style.opacity = '1';
-            letter.style.transform = `translate(-50%, -50%) scale(1) rotate(2deg)`;
-        }, 500);
+            letter.style.transform = `translate(-50%, -50%) scale(1) rotate(1deg)`;
+        }, 400);
 
         loader.style.opacity = '0';
-        setTimeout(() => loader.remove(), 1000);
+        setTimeout(() => loader.remove(), 800);
     }
 
-    // Drag Logic
     function makeDraggable(el) {
-        let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
-        el.onmousedown = dragMouseDown;
-        el.ontouchstart = dragMouseDown;
+        let p1 = 0, p2 = 0, p3 = 0, p4 = 0;
+        el.onmousedown = start; el.ontouchstart = start;
 
-        function dragMouseDown(e) {
-            e.preventDefault();
-            const clientX = e.type === 'touchstart' ? e.touches[0].clientX : e.clientX;
-            const clientY = e.type === 'touchstart' ? e.touches[0].clientY : e.clientY;
-            pos3 = clientX;
-            pos4 = clientY;
-            document.onmouseup = closeDragElement;
-            document.ontouchend = closeDragElement;
-            document.onmousemove = elementDrag;
-            document.ontouchmove = elementDrag;
+        function start(e) {
+            const cx = e.type === 'touchstart' ? e.touches[0].clientX : e.clientX;
+            const cy = e.type === 'touchstart' ? e.touches[0].clientY : e.clientY;
+            p3 = cx; p4 = cy;
+            document.onmouseup = stop; document.ontouchend = stop;
+            document.onmousemove = move; document.ontouchmove = move;
             el.style.zIndex = "1000";
         }
 
-        function elementDrag(e) {
-            e.preventDefault();
-            const clientX = e.type === 'touchmove' ? e.touches[0].clientX : e.clientX;
-            const clientY = e.type === 'touchmove' ? e.touches[0].clientY : e.clientY;
-            pos1 = pos3 - clientX;
-            pos2 = pos4 - clientY;
-            pos3 = clientX;
-            pos4 = clientY;
-            el.style.top = (el.offsetTop - pos2) + "px";
-            el.style.left = (el.offsetLeft - pos1) + "px";
+        function move(e) {
+            const cx = e.type === 'touchmove' ? e.touches[0].clientX : e.clientX;
+            const cy = e.type === 'touchmove' ? e.touches[0].clientY : e.clientY;
+            p1 = p3 - cx; p2 = p4 - cy;
+            p3 = cx; p4 = cy;
+            el.style.top = (el.offsetTop - p2) + "px";
+            el.style.left = (el.offsetLeft - p1) + "px";
         }
 
-        function closeDragElement() {
-            document.onmouseup = null;
-            document.ontouchend = null;
-            document.onmousemove = null;
-            document.ontouchmove = null;
+        function stop() {
+            document.onmouseup = null; document.ontouchend = null;
+            document.onmousemove = null; document.ontouchmove = null;
             el.style.zIndex = el.classList.contains('letter-wrap') ? "100" : "50";
         }
     }
 
     makeDraggable(letter);
-    
-    document.getElementById('overlay').onclick = function() {
-        this.style.display = 'none';
+    overlay.onclick = () => {
+        overlay.classList.remove('active');
+        setTimeout(() => overlay.style.display = 'none', 400);
     };
 
     window.onload = init;
